@@ -1,5 +1,5 @@
 
-# Ackermann SLAM Simulation (ROS 2 + Ignition Gazebo) 🏎️
+# FastLIO-ROS2-Simulation (ROS 2 + Ignition Gazebo) 🏎️
 **Author:** Jossue Espinoza <br>
 
 [![ROS 2](https://img.shields.io/badge/ROS%202-Humble-blue.svg)](https://docs.ros.org/en/humble/)
