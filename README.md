@@ -10,8 +10,16 @@
 
 ---
 
-This ROS 2 package is designed to simulate various environments and mobile robots in Ignition Gazebo.
-It focuses on demonstrating an Ackermann-drive robotic system with integrated SLAM capabilities for mapping and autonomous navigation.
+This ROS 2 package provides a complete simulation framework for mobile robots in **Ignition Gazebo**.  
+It acts as a bridge between simulated environments and [**FAST_LIO**](https://github.com/Ericsii/FAST_LIO_ROS2), enabling seamless integration of **LiDAR**, **IMU**, and **vehicle models**.
+
+Within this repository, you’ll find everything needed to:
+
+- 🛰️ Simulate different **LiDARs**, **vehicles**, and **sensors**.  
+- 🔄 **Synchronize IMU and LiDAR** data for accurate mapping.  
+- 🗺️ Generate and **save maps** using FAST LIO.  
+- 🤖 Add custom **mobile robots** to your simulations.  
+- 🧠 Test and evaluate **SLAM algorithms** in virtual environments.
 
 **NOTE:** this repo was tested on Ubuntu 22.04 LTS, with ROS 2 Humble and Gazebo Fortress (Ignition).
 
