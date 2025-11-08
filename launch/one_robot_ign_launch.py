@@ -7,7 +7,7 @@ from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.actions import Node
 
 robot_model = 'ackermann' #Here you can add your URDF model defined in ackermann_slam_sim/urdf
-robot_ns = 'r1' # Robot namespace (robot name)
+robot_ns = 'r1' # Robot namespace (robot name) ----> RViz is set for this value, Do not move unless you need.
 pose = ['1.0', '0.0', '0.0', '0.0'] #Initial robot pose: x,y,z,th
 robot_base_color = '0.0 0.0 1.0 0.95' #Ign and Rviz color of the robot's main body (rgba)
 world_file = 'warehouse.sdf' # empty, warehouse
@@ -120,7 +120,7 @@ def generate_launch_description():
         [
             simu_time,
             ign_resource_path,
-            #open_rviz,
+            open_rviz,
             open_ign,
             gz_spawn_entity,
             robot_state_publisher,

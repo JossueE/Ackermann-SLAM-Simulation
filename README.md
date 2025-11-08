@@ -41,7 +41,12 @@ Within this repository, you’ll find everything needed to:
     - [Pre-requisites and Ignition installation](#)
     - [Installing ROS 2 packages](#)
     - [Cloning FAST_LIO adapted to work with ROS2](#)
+    - [Localization (adapted for ROS 2) ](#)
     - [Cloning this Repo](#)
+- [Configuration](#)
+    - [Configure The Simulation](#)
+        - 
+
 - [Simulation](#)
     - [Launching the Robot in Gazebo](#)
     - [Teleoperating the Robot](#) 
@@ -173,10 +178,101 @@ colcon build --packages-select ackermann_slam_sim --symlink-install
 source install/setup.bash
 ```
 
-**IMPORTANT:** This builds the package and sets a symbolic link to the python files (nodes and launch files). With this, re-build every time that a python file is modified, is not required.<br>
-In ROS 2, launch files may be written in yaml, xml or python languages, but it is extremely recommended to use python. Also, the name of all launch files must finish with 'launch.py'. Otherwise, the file will not be recognized.
+> [!NOTE]
+> This builds the package and sets a symbolic link to the python files (nodes and launch files). With this, re-build every time that a python file is modified, is not required.<br>
 
 If some warnings appear, run `colcon build --packages-select ackermann_slam_sim --symlink-install` again and they will disappear.
+
+---
+## Configuration
+
+### Configure The Simulation
+
+The `one_robot_ign_launch.py` file launches **Gazebo (Ignition)** using a predefined world and spawns the selected robot model automatically.
+
+Inside the launch file, you’ll find configurable parameters such as:
+
+```python
+robot_model = 'ackermann' #Here you can add your URDF model defined in ackermann_slam_sim/urdf/
+robot_ns = 'r1' # Robot namespace (robot name) ----> RViz is set for this value, Do not move unless you need.
+pose = ['1.0', '0.0', '0.0', '0.0'] #Initial robot pose: x,y,z,th
+robot_base_color = '0.0 0.0 1.0 0.95' #Ign and Rviz color of the robot's main body (rgba)
+world_file = 'warehouse.sdf' # empty, warehouse -----> This is the world of our simulatio, is defined in ackermann_slam_sim/worlds/
+package_name = 'ackermann_slam_sim'
+```
+> [!IMPORTANT]
+> They are preconfigured for specific environments and nodes.
+> Changing them without understanding their dependencies may cause the system to break.
+
+### Adding New Robots and Worlds
+
+You can easily **add a new robot model** by creating a **URDF** description in  
+`ackermann_slam_sim/urdf/`, preferably in **`.xacro`** format for easier parameterization and reuse.
+
+To include a new environment, simply **add your world file** in  
+`ackermann_slam_sim/worlds/` using the **`.sdf`** format.
+
+Once added, you can select them in the launch file by updating:
+```python
+robot_model = '<your_robot_name>'
+world_file = '<your_world_name>.sdf'
+```
+
+### Configure your LiDAR (URDF/Xacro + Ignition)
+
+This repo mounts a LiDAR on `base_link` and spawns an Ignition (Gazebo) ray sensor.  
+You can tune **pose**, **FOV**, **resolution**, **rate**, **range**, **noise**, and the **topic**.
+
+Key parameters inside `<gazebo><sensor … type='gpu_lidar'>`:
+- `update_rate` (Hz): sensor frequency.
+- `<scan>/<horizontal|vertical>`: `samples`, `min_angle`, `max_angle`, `resolution`.
+- `<range>`: `min`, `max`, `resolution`.
+- `<noise>`: `type`, `mean`, `stddev`.
+- `<topic>`: Ignition/Gazebo sensor topic name (bridge it to ROS 2 if needed).
+- `<ignition_frame_id>`: TF frame for the point cloud.
+
+> **Tip:** Use **`gpu_lidar`** if you have GPU available (faster). Use **`lidar`** for CPU-only.
+
+In this repo I put a general example of a LIDAR but if you want an specific one. Here are some tips to configure your lidar about what you need.
+
+The `<update_rate> 10 </update_rate>` is set to 10Mhz cause the most part of Lidars works at this frecuency, but you can pot yours here.
+
+Then we have the block code `<scan> ... </scan>` here you are going to find to parts `<Horizontal>` and `<Vertical>` compoused by:
+
+```html
+
+  <samples>360</samples>             
+  <resolution>1</resolution>
+  <min_angle>${-PI}</min_angle>
+  <max_angle>${PI}</max_angle>
+
+
+   <samples>32</samples>     
+   <resolution>1</resolution>
+   <min_angle>${-PI/4}</min_angle> <!-- -45 deg -->
+   <max_angle>${PI/4}</max_angle> <!-- +45 deg -->
+```
+
+Then we have 
+
+<range>
+    <min>0.1</min>
+    <max>100.0</max>
+    <resolution>0.017453</resolution>
+</range>
+
+And finaly to simulate noise
+
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.01</stddev>
+        </noise>
+
+> [!IMPORTANT]
+> Do not modify the topic unless it might be necesary. 
+
+
 
 ---
 
@@ -184,18 +280,6 @@ If some warnings appear, run `colcon build --packages-select ackermann_slam_sim 
 
 ### Launching the Robot in Gazebo
 
-The `one_robot_ign_launch.py` file launches **Gazebo (Ignition)** using a predefined world and spawns the selected robot model automatically.
-
-Inside the launch file, you’ll find configurable parameters such as:
-
-```python
-robot_model = 'ackermann' #Here you can add your URDF model defined in ackermann_slam_sim/urdf
-robot_ns = 'r1' # Robot namespace (robot name)
-pose = ['1.0', '0.0', '0.0', '0.0'] #Initial robot pose: x,y,z,th
-robot_base_color = '0.0 0.0 1.0 0.95' #Ign and Rviz color of the robot's main body (rgba)
-world_file = 'warehouse.sdf' # empty, warehouse
-package_name = 'ackermann_slam_sim'
-```
 
 You can launch the simulation with:
 

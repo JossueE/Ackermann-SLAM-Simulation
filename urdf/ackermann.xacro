@@ -192,7 +192,7 @@
   <gazebo reference="lidar_link">
     <sensor name='gpu_lidar' type='gpu_lidar'>
       <ignition_frame_id>lidar_link</ignition_frame_id> 
-      <update_rate>10</update_rate>
+      <update_rate>10</update_rate> <!-- MHz -->
       <ray>
         <scan>
           <horizontal>
@@ -202,10 +202,10 @@
             <max_angle>${PI}</max_angle>
           </horizontal>
           <vertical>
-            <samples>32</samples>     <!-- ************************* Unitree L2 Lidar - Se usa entre 64 – 128. ************************* -->
+            <samples>32</samples>     
             <resolution>1</resolution>
-            <min_angle>-0.785398</min_angle>
-            <max_angle>0.7853981799</max_angle>
+            <min_angle>${-PI/4}</min_angle> <!-- -45 deg -->
+            <max_angle>${PI/4}</max_angle> <!-- +45 deg -->
           </vertical>
         </scan>
         <range>
