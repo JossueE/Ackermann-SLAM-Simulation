@@ -50,7 +50,7 @@ Within this repository, you’ll find everything needed to:
 - [Launching](https://github.com/JossueE/FastLIO-ROS2-Simulation?tab=readme-ov-file#launching)
     - [Launching the Robot in Gazebo](https://github.com/JossueE/FastLIO-ROS2-Simulation?tab=readme-ov-file#launching-the-robot-in-gazebo)
     - [Teleoperating the Robot](https://github.com/JossueE/FastLIO-ROS2-Simulation?tab=readme-ov-file#teleoperating-the-robot) 
-    - [Saving the Map (.pcd)](https://github.com/JossueE/FastLIO-ROS2-Simulation?tab=readme-ov-file#saving-the-map)
+    - [Saving the Map (.pcd)](https://github.com/JossueE/FastLIO-ROS2-Simulation?tab=readme-ov-file#saving-the-map-pcd)
 
 
 ---
@@ -344,7 +344,7 @@ decalre_config_file_cmd = DeclareLaunchArgument(
 ---
 
 ## Launching
-    
+
 ### Launching the Robot in Gazebo
 
 You can start the simulation with:
