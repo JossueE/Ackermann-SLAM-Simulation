@@ -49,7 +49,7 @@ Within this repository, you’ll find everything needed to:
 
 - [Launching](https://github.com/JossueE/FastLIO-ROS2-Simulation?tab=readme-ov-file#launching)
     - [Launching the Robot in Gazebo](https://github.com/JossueE/FastLIO-ROS2-Simulation?tab=readme-ov-file#launching-the-robot-in-gazebo)
-    - [Launching the SLAM (FAST_LIO Mapping)](https://github.com/JossueE/FastLIO-ROS2-Simulation?tab=readme-ov-file#launching-the-slam-fast-lio-mapping)
+    - [Launching the SLAM (FAST_LIO Mapping)](https://github.com/JossueE/FastLIO-ROS2-Simulation?tab=readme-ov-file#launching-the-slam-fast_lio-mapping)
     - [Teleoperating the Robot](https://github.com/JossueE/FastLIO-ROS2-Simulation?tab=readme-ov-file#teleoperating-the-robot) 
     - [Saving the Map (.pcd)](https://github.com/JossueE/FastLIO-ROS2-Simulation?tab=readme-ov-file#saving-the-map-pcd)
 
