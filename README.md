@@ -33,23 +33,24 @@ Within this repository, you’ll find everything needed to:
 
 
 ## 📚 Table of Contents
-- [Installation](#)
-    - [Pre-requisites and Ignition installation](#)
-    - [Installing ROS 2 packages](#)
-    - [Cloning FAST_LIO adapted to work with ROS2](#)
-    - [Localization (adapted for ROS 2) ](#)
-    - [Cloning this Repo](#)
+- [Installation](https://github.com/JossueE/FastLIO-ROS2-Simulation?tab=readme-ov-file#installation)
+    - [Pre-requisites and Ignition installation](https://github.com/JossueE/FastLIO-ROS2-Simulation?tab=readme-ov-file#pre-requisites-and-ignition-installation)
+    - [Installing ROS 2 packages](https://github.com/JossueE/FastLIO-ROS2-Simulation?tab=readme-ov-file#installing-ros-2-packages)
+    - [Cloning FAST_LIO adapted to work with ROS2](https://github.com/JossueE/FastLIO-ROS2-Simulation?tab=readme-ov-file#cloning-fast_lio---mapping-adapted-for-ros-2)
+    - [Localization (adapted for ROS 2) ](https://github.com/JossueE/FastLIO-ROS2-Simulation?tab=readme-ov-file#localization-adapted-for-ros-2)
+    - [Cloning this Repo](https://github.com/JossueE/FastLIO-ROS2-Simulation?tab=readme-ov-file#cloning-this-repo)
 
-- [Configuration](#)
-    - [Configure The Simulation](#)
-    - [Adding New Robots and Worlds](#)
-    - [Configure your LiDAR (URDF/Xacro + Ignition)](#)
-    - [Configure your IMU (URDF/Xacro + Ignition)](#)
-    - [Configure FAST_LIO](#)
+- [Configuration](https://github.com/JossueE/FastLIO-ROS2-Simulation?tab=readme-ov-file#configuration)
+    - [Configure The Simulation](https://github.com/JossueE/FastLIO-ROS2-Simulation?tab=readme-ov-file#configure-the-simulation)
+    - [Adding New Robots and Worlds](https://github.com/JossueE/FastLIO-ROS2-Simulation?tab=readme-ov-file#adding-new-robots-and-worlds)
+    - [Configure your LiDAR (URDF/Xacro + Ignition)](https://github.com/JossueE/FastLIO-ROS2-Simulation?tab=readme-ov-file#configure-your-lidar-urdfxacro--ignition)
+    - [Configure your IMU (URDF/Xacro + Ignition)](https://github.com/JossueE/FastLIO-ROS2-Simulation?tab=readme-ov-file#configure-your-imu-urdfxacro--ignition)
+    - [Configure FAST_LIO](https://github.com/JossueE/FastLIO-ROS2-Simulation?tab=readme-ov-file#configure-fast_lio)
 
-- [Launching](#)
-    - [Launching the Robot in Gazebo](#)
-    - [Teleoperating the Robot](#) 
+- [Launching](https://github.com/JossueE/FastLIO-ROS2-Simulation?tab=readme-ov-file#launching)
+    - [Launching the Robot in Gazebo](https://github.com/JossueE/FastLIO-ROS2-Simulation?tab=readme-ov-file#launching-the-robot-in-gazebo)
+    - [Teleoperating the Robot](https://github.com/JossueE/FastLIO-ROS2-Simulation?tab=readme-ov-file#teleoperating-the-robot) 
+    - [Saving the Map (.pcd)](https://github.com/JossueE/FastLIO-ROS2-Simulation?tab=readme-ov-file#saving-the-map)
 
 
 ---
@@ -343,7 +344,7 @@ decalre_config_file_cmd = DeclareLaunchArgument(
 ---
 
 ## Launching
-
+    
 ### Launching the Robot in Gazebo
 
 You can start the simulation with:
@@ -391,7 +392,7 @@ ign topic -t "/model/r1/cmd_vel" -m ignition.msgs.Twist -p "linear: {x: 0.5, y: 
 ```
 ---
 
-### Saving the Map 
+### Saving the Map (.pcd)
 
 Move the robot to cover the environment and avoid losing measurements.
 When you’re satisfied with the coverage, call the service to save the map (FAST_LIO saves PCD files):
