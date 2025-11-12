@@ -49,6 +49,7 @@ Within this repository, you’ll find everything needed to:
 
 - [Launching](https://github.com/JossueE/FastLIO-ROS2-Simulation?tab=readme-ov-file#launching)
     - [Launching the Robot in Gazebo](https://github.com/JossueE/FastLIO-ROS2-Simulation?tab=readme-ov-file#launching-the-robot-in-gazebo)
+    - [Launching the SLAM (FAST_LIO Mapping)](https://github.com/JossueE/FastLIO-ROS2-Simulation?tab=readme-ov-file#launching-the-slam-fast-lio-mapping)
     - [Teleoperating the Robot](https://github.com/JossueE/FastLIO-ROS2-Simulation?tab=readme-ov-file#teleoperating-the-robot) 
     - [Saving the Map (.pcd)](https://github.com/JossueE/FastLIO-ROS2-Simulation?tab=readme-ov-file#saving-the-map-pcd)
 
@@ -340,7 +341,8 @@ decalre_config_file_cmd = DeclareLaunchArgument(
     description='Config file'
 )
 ```
-
+> [!NOTE]
+> This step is optional — you can also specify the `config_file` directly in the launch command (see the **Launch** section below).
 ---
 
 ## Launching
@@ -360,7 +362,7 @@ ros2 launch ackermann_slam_sim one_robot_ign_launch.py
 > - If you change the **LiDAR** or **IMU** topic names, update your RViz displays (reselect topics) so they match the new names.
 
 
-### Launching the (FAST_LIO Mapping)
+### Launching the SLAM (FAST_LIO Mapping)
 
 In a new terminal: 
 ```bash
@@ -368,7 +370,14 @@ cd ~/colcon_ws
 source install/setup.bash
 ros2 launch fast_lio mapping.launch.py 
 ```
+Or whit the config_file as an argument:
+```bash
+ros2 launch fast_lio mapping.launch.py config_file:=simulated.yaml
+```
 RViz will open with the LiDAR map view. Any warnings or errors will appear in the terminal.
+
+> [!NOTE]
+> To see more information check de original documentation. [Link](https://github.com/Ericsii/FAST_LIO_ROS2)
 
 ---
 
@@ -397,9 +406,11 @@ ign topic -t "/model/r1/cmd_vel" -m ignition.msgs.Twist -p "linear: {x: 0.5, y: 
 Move the robot to cover the environment and avoid losing measurements.
 When you’re satisfied with the coverage, call the service to save the map (FAST_LIO saves PCD files):
 
-> [!Note]
-> - Enable the map-save flag and set the output path in `fast_lio/config/simulated.yaml` (e.g., map_file_path: `PCD/name_of_your_map.pcd`).  
+ - Enable the map-save flag `pcd_save.pcd_save_en` and set the output `map_file_path` in `fast_lio/config/simulated.yaml` (e.g., map_file_path: `PCD/name_of_your_map.pcd` and ).  
+ - With **Launching the SLAM (FAST_LIO Mapping)** active
+ - Open RQt and switch to `Plugins->Services->Service Caller`. Trigger the service `/map_save`, then the pcd map file will be generated
 
+or: 
 ```bash
 ros2 service call /map_save std_srvs/srv/Trigger "{}"   #<-------------------- Under Revision -------------------->
 ```
