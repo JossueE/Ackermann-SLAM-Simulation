@@ -9,23 +9,25 @@
       world_file : 'depot.sdf' # empty.sdf, depot.sdf
 
     lidar:
-      lidar_frequency : 10.0 # The frequency of the lidar in MHz
-      period : 0.1  # The period of the lidar in seconds
-      lidar_out_topic: '/lidar/points'
+      lidar_frequency: 10.0              # Lidar frequency in Hz (typical value: 10 Hz)
+      period: 0.1                        # Scanning period in seconds
+      lidar_out_topic: '/lidar/points'   # Output topic for published point clouds
 
-      horizontal_samples : 360
-      horizontal_resolution : 1
-      horizontal_min_angle : -3.14159 
-      horizontal_max_angle : 3.14159
+      horizontal_samples: 360            # Number of horizontal scan samples per rotation
+      horizontal_resolution: 1           # Horizontal angular resolution in degrees
+      horizontal_min_angle: -3.14159     # Minimum horizontal angle (radians)
+      horizontal_max_angle:  3.14159     # Maximum horizontal angle (radians)
 
-      vertical_samples : 32
-      vertical_resolution : 1
-      vertical_min_angle : -0.78539
-      vertical_max_angle : 0.78539
-      min_distance : 0.2
-      max_distance : 100.0
-      resolution : 0.017453
+      vertical_samples: 32               # Number of vertical scan lines
+      vertical_resolution: 1             # Vertical angular resolution in degrees
+      vertical_min_angle: -0.78539       # Minimum vertical angle (-45°)
+      vertical_max_angle:  0.78539       # Maximum vertical angle (+45°)
+
+      min_distance: 0.2                  # Minimum measurable distance (meters)
+      max_distance: 100.0                # Maximum measurable distance (meters)
+      resolution: 0.017453               # Angular resolution in radians (~1°)
+
       
     imu:
-      imu_frequency : 50.0 # The frequency of the lidar in MHz
+      imu_frequency : 50.0 # The frequency of the lidar in Hz
       imu_out_topic: '/imu/data'

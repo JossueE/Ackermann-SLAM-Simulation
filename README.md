@@ -32,10 +32,6 @@ Within this repository, you’ll find everything needed to:
 > **YouTube:** https://www.youtube.com/channel/UCNmZp0rCuWxqaKVljny2zyg 
 
 
-> [!IMPORTANT]
-> To obtain a correct behavior of the sensors, the world.sdf file MUST be correctly set by adding the corresponding 'plugin' tag inside the 'world' tag. For more information. please refer to https://gazebosim.org/docs/latest/sensors/.
-
-
 ## 📚 Table of Contents
 - [Installation](#)
     - [Pre-requisites and Ignition installation](#)
@@ -43,14 +39,17 @@ Within this repository, you’ll find everything needed to:
     - [Cloning FAST_LIO adapted to work with ROS2](#)
     - [Localization (adapted for ROS 2) ](#)
     - [Cloning this Repo](#)
+
 - [Configuration](#)
     - [Configure The Simulation](#)
-        - 
+    - [Adding New Robots and Worlds](#)
+    - [Configure your LiDAR (URDF/Xacro + Ignition)](#)
+    - [Configure your IMU (URDF/Xacro + Ignition)](#)
+    - [Configure FAST_LIO](#)
 
-- [Simulation](#)
+- [Launching](#)
     - [Launching the Robot in Gazebo](#)
     - [Teleoperating the Robot](#) 
-
 
 
 ---
@@ -190,19 +189,13 @@ If some warnings appear, run `colcon build --packages-select ackermann_slam_sim 
 
 The `one_robot_ign_launch.py` file launches **Gazebo (Ignition)** using a predefined world and spawns the selected robot model automatically.
 
-Inside the launch file, you’ll find configurable parameters such as:
+Inside the repository, you’ll find a configuration file located at `config/config.yaml`.  
+This file contains adjustable parameters for the simulation, as well as configuration options for the LiDAR and IMU functionalities.
 
-```python
-robot_model = 'ackermann' #Here you can add your URDF model defined in ackermann_slam_sim/urdf/
-robot_ns = 'r1' # Robot namespace (robot name) ----> RViz is set for this value, Do not move unless you need.
-pose = ['1.0', '0.0', '0.0', '0.0'] #Initial robot pose: x,y,z,th
-robot_base_color = '0.0 0.0 1.0 0.95' #Ign and Rviz color of the robot's main body (rgba)
-world_file = 'depot.sdf' # empty, depot -----> This is the world of our simulation, is defined in ackermann_slam_sim/worlds/
-package_name = 'ackermann_slam_sim'
-```
 > [!IMPORTANT]
-> They are preconfigured for specific environments and nodes.
-> Changing them without understanding their dependencies may cause the system to break.
+> To use the map `world_file` named **depot.sdf**, located in `colcon_ws/src/ackermann_slam_sim/worlds`,  
+> you must first extract the **Depot.zip** file found in `colcon_ws/src/ackermann_slam_sim`.  
+> After extracting it, copy the resulting folder into your `~/.ignition/models` directory.
 
 ### Adding New Robots and Worlds
 
@@ -217,97 +210,173 @@ Once added, you can select them in the launch file by updating:
 robot_model = '<your_robot_name>'
 world_file = '<your_world_name>.sdf'
 ```
+> [!IMPORTANT]
+> To obtain a correct behavior of the sensors, the world.sdf file MUST be correctly set by adding the corresponding 'plugin' tag inside the 'world' tag. For more information. please refer to https://gazebosim.org/docs/latest/sensors/.
 
 ### Configure your LiDAR (URDF/Xacro + Ignition)
 
 This repo mounts a LiDAR on `base_link` and spawns an Ignition (Gazebo) ray sensor.  
-You can tune **pose**, **FOV**, **resolution**, **rate**, **range**, **noise**, and the **topic**.
+You can tune **pose**, **FOV**, **resolution**, **rate**, **range** and the **topic** directly in the `config/config.yaml` file.
 
-Key parameters inside `<gazebo><sensor … type='gpu_lidar'>`:
-- `update_rate` (Hz): sensor frequency.
-- `<scan>/<horizontal|vertical>`: `samples`, `min_angle`, `max_angle`, `resolution`.
-- `<range>`: `min`, `max`, `resolution`.
-- `<noise>`: `type`, `mean`, `stddev`.
-- `<topic>`: Ignition/Gazebo sensor topic name (bridge it to ROS 2 if needed).
-- `<ignition_frame_id>`: TF frame for the point cloud.
+> ![!TIP]
+> Use **`gpu_lidar`** if you have GPU available (faster). Use **`lidar`** for CPU-only.
+> Also, can add or modify the noise directly in your .xacro file.
 
-> **Tip:** Use **`gpu_lidar`** if you have GPU available (faster). Use **`lidar`** for CPU-only.
+```yaml
+    lidar:
+    lidar_frequency: 10.0              # Lidar frequency in Hz (typical value: 10 Hz)
+    period: 0.1                        # Scanning period in seconds
+    lidar_out_topic: '/lidar/points'   # Output topic for published point clouds
 
-In this repo I put a general example of a LIDAR but if you want an specific one. Here are some tips to configure your lidar about what you need.
+    horizontal_samples: 360            # Number of horizontal scan samples per rotation
+    horizontal_resolution: 1           # Horizontal angular resolution in degrees
+    horizontal_min_angle: -3.14159     # Minimum horizontal angle (radians)
+    horizontal_max_angle:  3.14159     # Maximum horizontal angle (radians)
 
-The `<update_rate> 10 </update_rate>` is set to 10Mhz cause the most part of Lidars works at this frecuency, but you can pot yours here.
+    vertical_samples: 32               # Number of vertical scan lines
+    vertical_resolution: 1             # Vertical angular resolution in degrees
+    vertical_min_angle: -0.78539       # Minimum vertical angle (-45°)
+    vertical_max_angle:  0.78539       # Maximum vertical angle (+45°)
 
-Then we have the block code `<scan> ... </scan>` here you are going to find to parts `<Horizontal>` and `<Vertical>` compoused by:
-
-```html
-
-  <samples>360</samples>             
-  <resolution>1</resolution>
-  <min_angle>${-PI}</min_angle>
-  <max_angle>${PI}</max_angle>
-
-
-   <samples>32</samples>     
-   <resolution>1</resolution>
-   <min_angle>${-PI/4}</min_angle> <!-- -45 deg -->
-   <max_angle>${PI/4}</max_angle> <!-- +45 deg -->
+    min_distance: 0.2                  # Minimum measurable distance (meters)
+    max_distance: 100.0                # Maximum measurable distance (meters)
+    resolution: 0.017453               # Angular resolution in radians (~1°)
 ```
 
-Then we have 
+In this repository, a general LiDAR configuration example is provided.  
+If you want to adapt it to a specific sensor, here are some key parameters to tune:
 
-<range>
-    <min>0.1</min>
-    <max>100.0</max>
-    <resolution>0.017453</resolution>
-</range>
+- **`lidar_frequency`** — Default is `10 Hz`, since most LiDARs operate around this range. Adjust it according to your sensor specifications.  
+- **`horizontal_*` and `vertical_*` parameters** — Define the LiDAR’s scanning structure:
+  - `samples` → number of beams or steps per axis  
+  - `resolution` → angular precision (° or radians)  
+  - `min_angle` / `max_angle` → scanning limits for each axis  
+- **`min_distance`, `max_distance`, and `resolution`** — Define the LiDAR’s detection range and precision.  
+  Ensure these match your hardware’s datasheet for accurate simulation results.
 
-And finaly to simulate noise
 
-        <noise>
-          <type>gaussian</type>
-          <mean>0.0</mean>
-          <stddev>0.01</stddev>
-        </noise>
+### Configure your IMU (URDF/Xacro + Ignition)
+
+In this repository you’ll find a simulated IMU with a configurable update rate.  
+By default, a small amount of noise is enabled to approximate real-world behavior.  
+If you want to customize noise, edit your robot’s `.xacro` to pass the values below to the IMU plugin.
+
+```yaml
+imu:
+    imu_frequency : 50.0 # The frequency of the lidar in Hz
+    imu_out_topic: '/imu/data' #The output topic of the IMU
+```
+
+### Configure FAST_LIO
+FAST_LIO supports multiple LiDAR families (Velodyne, Livox/Avia, Ouster, Unitree, etc.).
+Create a sensor-specific config file in `fast_lio/config/`, e.g. `simulated.yaml`, and reference it from your launch.
 
 > [!IMPORTANT]
-> Do not modify the topic unless it might be necesary. 
+> Wherever you see comments like `# <----------------- HERE ... ----------------->`, copy the **exact values** you already defined in your repo’s config:
+> - `common.lid_topic` ← your `lidar_out_topic`
+> - `common.imu_topic` ← your `imu_out_topic`
+> - `preprocess.scan_line` ← your `vertical_samples`
+> - `preprocess.scan_rate` ← your `lidar_frequency` LiDAR rotation rate in Hz (e.g., 10)
+> - `mapping.fov_degree` ← `horizontal_max_angle` and `horizontal_min_angle` (in degrees)
+> - `mapping.det_range` ← your `max_distance`
 
+```yaml
+/**:
+    ros__parameters:
+        feature_extract_enable: false
+        point_filter_num: 4
+        max_iteration: 3
+        filter_size_surf: 0.5
+        filter_size_map: 0.5
+        cube_side_length: 1000.0
+        runtime_pos_log_enable: false
+        map_file_path: PCD/name_of_your_map.pcd
 
+        common:
+            lid_topic:  "/lidar/points"  # <----------------- HERE YOU PUT EXACTLY THE lidar_out_topic DEFINED BEFORE ----------------->
+            imu_topic:  "/imu/data"      # <----------------- HERE YOU PUT EXACTLY THE imu_out_topic DEFINED BEFORE ----------------->
+            time_sync_en: false         # ONLY turn on when external time synchronization is really not possible
+            time_offset_lidar_to_imu: 0.0 # Time offset between lidar and IMU calibrated by other algorithms, e.g. LI-Init (can be found in README).
+                                        # This param will take effect no matter what time_sync_en is. So if the time offset is not known exactly, please set as 0.0
+
+        preprocess:
+            lidar_type: 5                # 1 for Livox serials LiDAR, 2 for Velodyne LiDAR, 3 for ouster LiDAR, 5 simulated <----- DO NOT MODIFY
+            scan_line: 32                # <----------------- HERE YOU PUT EXACTLY THE vertical_samples DEFINED BEFORE ----------------->
+            scan_rate: 10                # <----------------- HERE YOU PUT EXACTLY THE lidar_frequency DEFINED BEFORE ----------------->
+            timestamp_unit: 0            # the unit of time/t field in the PointCloud2: 0-second, 1-milisecond, 2-microsecond, 3-nanosecond. <----- DO NOT MODIFY
+            blind: 0.05
+
+        mapping:
+            acc_cov: 0.1
+            gyr_cov: 0.1
+            b_acc_cov: 0.0001
+            b_gyr_cov: 0.0001
+            fov_degree:    360.0          # <----------------- HERE YOU PUT EXACTLY THE horizontal_samples DEFINED BEFORE ----------------->       
+            det_range:     100.0          # <----------------- HERE YOU PUT EXACTLY THE max_distance DEFINED BEFORE ----------------->
+            extrinsic_est_en:  false      # true: enable the online estimation of IMU-LiDAR extrinsic,
+            extrinsic_T: [ 0., 0., 0.]
+            extrinsic_R: [ 1., 0., 0., 
+                           0., 1., 0., 
+                           0., 0., 1.]
+
+        publish:
+            path_en:  false
+            scan_publish_en:  true       # false: close all the point cloud output
+            dense_publish_en: true       # false: low down the points number in a global-frame point clouds scan.
+            scan_bodyframe_pub_en: true  # true: output the point cloud scans in IMU-body-frame
+
+        pcd_save:
+            pcd_save_en: true
+            interval: -1                 # how many LiDAR frames saved in each pcd file; 
+                                        # -1 : all frames will be saved in ONE pcd file, may lead to memory crash when having too much frames.
+```
+
+Then go to `fast_lio/launch/mapping.launch.py` and modify this function:
+
+```python
+decalre_config_file_cmd = DeclareLaunchArgument(
+    'config_file', default_value='simulated.yaml', # <----------------- HERE YOU PUT EXACTLY THE Same that you put in your .yaml DEFINED BEFORE ----------------->
+    description='Config file'
+)
+```
 
 ---
 
-## Simulation
+## Launching
 
 ### Launching the Robot in Gazebo
 
-
-You can launch the simulation with:
+You can start the simulation with:
 
 ```bash
+cd ~/colcon_ws
+colcon build --packages-select ackermann_slam_sim fast_lio --symlink-install
+source install/setup.bash
 ros2 launch ackermann_slam_sim one_robot_ign_launch.py
 ```
 > [!NOTE]
-> The first launch may take longer as Gazebo caches assets and loads world resources.
+> - The first launch may take longer while Gazebo/Ignition caches assets and loads world resources.
+> - If you change the **LiDAR** or **IMU** topic names, update your RViz displays (reselect topics) so they match the new names.
 
-If you want to modify parameters such as the robot model, initial pose, world file, base color, or namespace, edit the `one_robot_ign_launch.py` file directly.
 
-> [!IMPORTANT]
-> Is important to say that please do not modify the name of the topics, Unless you really understand what are you doing. As a result that this package is totally compatible with ... and is important be congruent. 
+### Launching the (FAST_LIO Mapping)
+
+In a new terminal: 
+```bash
+cd ~/colcon_ws
+source install/setup.bash
+ros2 launch fast_lio mapping.launch.py 
+```
+RViz will open with the LiDAR map view. Any warnings or errors will appear in the terminal.
 
 ---
 
 ### Teleoperating the Robot
 
-To teleoperate both the _differential_ and _omnidirectional_ mobile robot, use the package node:
+To teleoperate both the **_differential_** and **_omnidirectional_** mobile robot, use the package node:
 
 ```bash
 ros2 run ackermann_slam_sim omni_teleop_keyboard.py
-```
-
-To use a namespace, to remap topics, services and node name, please use:
-
-```bash
-ros2 run ackermann_slam_sim omni_teleop_keyboard.py --ros-args -r __ns:=/r1
 ```
 
 To publish a velocity from terminal:
@@ -315,12 +384,21 @@ To publish a velocity from terminal:
 ```bash
 ros2 topic pub --once /cmd_vel geometry_msgs/msg/Twist "{linear: {x: 0.1, y: 0.1}, angular: {z: 0.3}}"
 ```
-```bash
-ros2 topic pub --once /cmd_vel geometry_msgs/msg/Twist "{linear: {x: 0.1, y: 0.1}, angular: {z: 0.3}}"
-```
-To publish a velocity directly on a Ignition Topic from terminal:
+To publish a velocity directly on a **Ignition** Topic from terminal:
 
 ```bash
 ign topic -t "/model/r1/cmd_vel" -m ignition.msgs.Twist -p "linear: {x: 0.5, y: 0.5}"
 ```
 ---
+
+### Saving the Map 
+
+Move the robot to cover the environment and avoid losing measurements.
+When you’re satisfied with the coverage, call the service to save the map (FAST_LIO saves PCD files):
+
+> [!Note]
+> - Enable the map-save flag and set the output path in `fast_lio/config/simulated.yaml` (e.g., map_file_path: `PCD/name_of_your_map.pcd`).  
+
+```bash
+ros2 service call /map_save std_srvs/srv/Trigger "{}"   #<-------------------- Under Revision -------------------->
+```
