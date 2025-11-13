@@ -289,10 +289,10 @@ Create a sensor-specific config file in `fast_lio/config/`, e.g. `simulated.yaml
         feature_extract_enable: false
         point_filter_num: 4
         max_iteration: 3
-        filter_size_surf: 0.5
-        filter_size_map: 0.5
+        filter_size_surf: 0.2
+        filter_size_map: 0.2
         cube_side_length: 1000.0
-        runtime_pos_log_enable: false
+        runtime_pos_log_enable: true
         map_file_path: PCD/name_of_your_map.pcd # <----------------- HERE YOU DEFINE YOUR OUTPUT FILE ----------------->
 
         common:
@@ -428,9 +428,9 @@ When you’re satisfied with the coverage, call the service to save the map (FAS
  - With **Launching the SLAM (FAST_LIO Mapping)** active
  - Open RQt and switch to `Plugins->Services->Service Caller`. Trigger the service `/map_save`, then the pcd map file will be generated
 
-or: 
+or in a new terminal: 
 ```bash
-ros2 service call /map_save std_srvs/srv/Trigger "{}"   #<-------------------- Under Revision -------------------->
+ros2 service call /map_save std_srvs/srv/Trigger "{}" 
 ```
 > [!WARNING]
 > If you see logs with:
