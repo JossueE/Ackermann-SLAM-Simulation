@@ -48,7 +48,6 @@ def generate_launch_description():
     min_distance = lidar.get('min_distance', 0.2)
     max_distance = lidar.get('max_distance', 100.0)
     resolution = lidar.get('resolution', 0.017453)
-    lidar_origin_joint = lidar.get('lidar_origin_joint', "0.4 0.0 0.7")  # x,y,z
     
 
     # IMU parameters
@@ -109,7 +108,6 @@ def generate_launch_description():
                 'max_distance': str(max_distance),
                 'resolution': str(resolution),
                 'imu_frequency': str(imu_frequency), 
-                'lidar_origin_joint': str(lidar_origin_joint),
                 })
     except Exception as e:
         import traceback, sys

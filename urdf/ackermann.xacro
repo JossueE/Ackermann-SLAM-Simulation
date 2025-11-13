@@ -23,7 +23,6 @@
   <xacro:arg name="min_distance"    default="0.2"/>
   <xacro:arg name="max_distance"    default="100.0"/>
   <xacro:arg name="resolution"    default="0.017453"/>
-  <xacro:arg name="lidar_origin_joint"    default="-0.04 0 0.07"/>
 
   <xacro:arg name="imu_frequency"    default="50"/>
   
@@ -193,7 +192,7 @@
   <joint name="lidar_joint" type="fixed">
     <parent link="base_link"/>
     <child link="lidar_link"/>
-    <origin xyz=$(arg lidar_origin_joint) rpy="0 0 0"/>
+    <origin xyz="-0.04 0 0.07" rpy="0 0 0"/>
   </joint>
   <link name="lidar_link">
     <visual>
