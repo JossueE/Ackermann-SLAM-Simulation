@@ -220,12 +220,13 @@ world_file = '<your_world_name>.sdf'
 This repo mounts a LiDAR on `base_link` and spawns an Ignition (Gazebo) ray sensor.  
 You can tune **pose**, **FOV**, **resolution**, **rate**, **range** and the **topic** directly in the `config/config.yaml` file.
 
-> ![!TIP]
+> [!TIP]
 > Use **`gpu_lidar`** if you have GPU available (faster). Use **`lidar`** for CPU-only.
 > Also, can add or modify the noise directly in your .xacro file.
 
 ```yaml
     lidar:
+    lidar_origin_joint: "-0.04 0 0.07" # The joint where the lidar is attached x,y,z
     lidar_frequency: 10.0              # Lidar frequency in Hz (typical value: 10 Hz)
     period: 0.1                        # Scanning period in seconds
     lidar_out_topic: '/lidar/points'   # Output topic for published point clouds
@@ -316,7 +317,8 @@ Create a sensor-specific config file in `fast_lio/config/`, e.g. `simulated.yaml
             fov_degree:    360.0          # <----------------- HERE YOU PUT EXACTLY THE horizontal_samples DEFINED BEFORE ----------------->       
             det_range:     100.0          # <----------------- HERE YOU PUT EXACTLY THE max_distance DEFINED BEFORE ----------------->
             extrinsic_est_en:  false      # true: enable the online estimation of IMU-LiDAR extrinsic,
-            extrinsic_T: [ 0., 0., 0.]
+
+            extrinsic_T: [-0.04, 0., 0.07] # <----------------- CHECK the note IMPORTANT BELOW 
             extrinsic_R: [ 1., 0., 0., 
                            0., 1., 0., 
                            0., 0., 1.]
@@ -332,6 +334,24 @@ Create a sensor-specific config file in `fast_lio/config/`, e.g. `simulated.yaml
             interval: -1                 # how many LiDAR frames saved in each pcd file; 
                                         # -1 : all frames will be saved in ONE pcd file, may lead to memory crash when having too much frames.
 ```
+
+> [!WARNING]
+> If you see logs with:
+> `No point, skip this scan!` and very low `downsamp` values (e.g. `downsamp 1`)
+> check your IMU–LiDAR extrinsics.
+> 
+> Make sure that:
+> - In your URDF/Xacro, the LiDAR pose relative to the IMU/base_link matches
+> - In FAST_LIO, `mapping.extrinsic_T` and `mapping.extrinsic_R` are set to that same transform
+> 
+> Once the extrinsics are correct, you should see stable logs like:
+> `In num: 11520 downsamp ≈ 2400 ... effect num ≈ 1200`
+> and no more `No point, skip this scan!`.
+> 
+> The values you see in my `extrinsic_T` come from the fact that my IMU is located at the origin of `base_link` (0, 0, 0).
+> Therefore, `extrinsic_T` directly matches the `lidar_joint` origin offset.
+> In your case, these values **must** be configured according to the relative pose between your IMU (body frame) and your LiDAR in your own robot model.
+
 
 Then go to `fast_lio/launch/mapping.launch.py` and modify this function:
 

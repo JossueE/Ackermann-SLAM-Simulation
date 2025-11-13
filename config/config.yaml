@@ -9,6 +9,7 @@
       world_file : 'depot.sdf' # empty.sdf, depot.sdf
 
     lidar:
+      lidar_origin_joint: "-0.04 0 0.07" # The joint where the lidar is attached x,y,z
       lidar_frequency: 10.0              # Lidar frequency in Hz (typical value: 10 Hz)
       period: 0.1                        # Scanning period in seconds
       lidar_out_topic: '/lidar/points'   # Output topic for published point clouds
