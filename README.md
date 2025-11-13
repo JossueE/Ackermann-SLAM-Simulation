@@ -324,6 +324,7 @@ Create a sensor-specific config file in `fast_lio/config/`, e.g. `simulated.yaml
                            0., 0., 1.]
 
         publish:
+            map_pub_en: true
             path_en:  false
             scan_publish_en:  true       # false: close all the point cloud output
             dense_publish_en: true       # false: low down the points number in a global-frame point clouds scan.
