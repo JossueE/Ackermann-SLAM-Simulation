@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(ackermann_slam_sim)
+project(slam_sim)
 
 # Default to C++14
 if(NOT CMAKE_CXX_STANDARD)

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>ackermann_slam_sim</name>
+  <name>slam_sim</name>
   <version>0.1.0</version>
   <description>Package to simulate different mobile robots in Ignition Gazebo with ROS 2</description>
   <maintainer email="cmauricioae8@gmail.com">C. Mauricio Arteaga-Escamilla from 'Robotica Posgrado' (Youtube channel)</maintainer>

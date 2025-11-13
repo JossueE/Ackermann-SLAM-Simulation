@@ -155,12 +155,12 @@ so that the system remains fully compatible with both **simulation** and **real-
 ### Localization (adapted for ROS 2) 
 
 
-██╗░░░░░░█████╗░░█████╗░██████╗░██╗███╗░░██╗░██████╗░
-██║░░░░░██╔══██╗██╔══██╗██╔══██╗██║████╗░██║██╔════╝░
-██║░░░░░██║░░██║███████║██║░░██║██║██╔██╗██║██║░░██╗░
-██║░░░░░██║░░██║██╔══██║██║░░██║██║██║╚████║██║░░╚██╗
-███████╗╚█████╔╝██║░░██║██████╔╝██║██║░╚███║╚██████╔╝
-╚══════╝░╚════╝░╚═╝░░╚═╝╚═════╝░╚═╝╚═╝░░╚══╝░╚═════╝░
+██╗░░░░░░█████╗░░█████╗░██████╗░██╗███╗░░██╗░██████
+██║░░░░░██╔══██╗██╔══██╗██╔══██╗██║████╗░██║██╔════
+██║░░░░░██║░░██║███████║██║░░██║██║██╔██╗██║██║░░██
+██║░░░░░██║░░██║██╔══██║██║░░██║██║██║╚████║██║░░╚█
+███████╗╚█████╔╝██║░░██║██████╔╝██║██║░╚███║╚██████
+╚══════╝░╚════╝░╚═╝░░╚═╝╚═════╝░╚═╝╚═╝░░╚══╝░╚═════
 
 ### Cloning this Repo
 
@@ -175,14 +175,14 @@ cd ..
 
 Then, build colcon ws:
 ```bash
-colcon build --packages-select ackermann_slam_sim --symlink-install
+colcon build --packages-select slam_sim --symlink-install
 source install/setup.bash
 ```
 
 > [!NOTE]
 > This builds the package and sets a symbolic link to the python files (nodes and launch files). With this, re-build every time that a python file is modified, is not required.<br>
 
-If some warnings appear, run `colcon build --packages-select ackermann_slam_sim --symlink-install` again and they will disappear.
+If some warnings appear, run `colcon build --packages-select slam_sim --symlink-install` again and they will disappear.
 
 ---
 ## Configuration
@@ -195,17 +195,17 @@ Inside the repository, you’ll find a configuration file located at `config/con
 This file contains adjustable parameters for the simulation, as well as configuration options for the LiDAR and IMU functionalities.
 
 > [!IMPORTANT]
-> To use the map `world_file` named **depot.sdf**, located in `colcon_ws/src/ackermann_slam_sim/worlds`,  
-> you must first extract the **Depot.zip** file found in `colcon_ws/src/ackermann_slam_sim`.  
+> To use the map `world_file` named **depot.sdf**, located in `colcon_ws/src/slam_sim/worlds`,  
+> you must first extract the **Depot.zip** file found in `colcon_ws/src/slam_sim`.  
 > After extracting it, copy the resulting folder into your `~/.ignition/models` directory.
 
 ### Adding New Robots and Worlds
 
 You can easily **add a new robot model** by creating a **URDF** description in  
-`ackermann_slam_sim/urdf/`, preferably in **`.xacro`** format for easier parameterization and reuse.
+`slam_sim/urdf/`, preferably in **`.xacro`** format for easier parameterization and reuse.
 
 To include a new environment, simply **add your world file** in  
-`ackermann_slam_sim/worlds/` using the **`.sdf`** format.
+`slam_sim/worlds/` using the **`.sdf`** format.
 
 Once added, you can select them in the launch file by updating:
 ```python
@@ -353,9 +353,9 @@ You can start the simulation with:
 
 ```bash
 cd ~/colcon_ws
-colcon build --packages-select ackermann_slam_sim fast_lio --symlink-install
+colcon build --packages-select slam_sim fast_lio --symlink-install
 source install/setup.bash
-ros2 launch ackermann_slam_sim one_robot_ign_launch.py
+ros2 launch slam_sim one_robot_ign_launch.py
 ```
 > [!NOTE]
 > - The first launch may take longer while Gazebo/Ignition caches assets and loads world resources.
@@ -386,7 +386,7 @@ RViz will open with the LiDAR map view. Any warnings or errors will appear in th
 To teleoperate both the **_differential_** and **_omnidirectional_** mobile robot, use the package node:
 
 ```bash
-ros2 run ackermann_slam_sim omni_teleop_keyboard.py
+ros2 run slam_sim omni_teleop_keyboard.py
 ```
 
 To publish a velocity from terminal:

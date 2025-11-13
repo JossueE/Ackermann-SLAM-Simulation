@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <robot name="robot" xmlns:xacro="http://ros.org/wiki/xacro"> 
   
-  <xacro:property name="package_name" value="ackermann_slam_sim"/>
+  <xacro:property name="package_name" value="slam_sim"/>
   <xacro:property name="PI" value="3.14159265"/>
   
   <xacro:property name="wheelSeparation" value="0.13"/>

@@ -6,12 +6,12 @@ from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, SetE
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.actions import Node
 
-package_name = 'ackermann_slam_sim'
+package_name = 'slam_sim'
 
 def generate_launch_description():
 
     this_pkg_path = os.path.join(get_package_share_directory(package_name))
-    # ~/colcon_ws/install/ackermann_slam_sim/share/ackermann_slam_sim/
+    # ~/colcon_ws/install/slam_sim/share/slam_sim/
 
     # --- Load config ---   
     config_path = os.path.join(this_pkg_path, 'config', 'config.yaml')
