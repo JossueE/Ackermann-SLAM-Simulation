@@ -211,7 +211,7 @@ def generate_launch_description():
         [
             simu_time,
             ign_resource_path,
-            #open_rviz,
+            open_rviz,
             open_ign,
             gz_spawn_entity,
             robot_state_publisher,

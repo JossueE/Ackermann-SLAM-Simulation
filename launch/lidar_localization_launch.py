@@ -31,14 +31,21 @@ def generate_launch_description():
     root = cfg.get("/**", cfg)
     params = root.get("ros__parameters", root)
 
+    sim  = params["simulation"]
     lidar = params["lidar"]
     imu   = params["imu"]
     localization_params  = params.get("localization", {})  
     lidar_out_topic = lidar.get('lidar_out_topic', '/lidar/points')
     imu_out_topic   = imu.get('imu_out_topic', '/imu/data')
 
+
+    localization_params['map_path'] = sim.get('map_file_path', 'PCD/test.pcd')
+    localization_params['scan_max_range'] = lidar.get('max_distance', 100.0)
+    localization_params['scan_min_range'] = lidar.get('min_distance', 0.2)
+    localization_params['scan_period'] = lidar.get('period', 0.1)
     localization_params['lidar_topic_in_'] = lidar_out_topic+'_ign'
     localization_params['imu_topic_in_']   = imu_out_topic+'_ign'
+
 
 
     lidar_localization = launch_ros.actions.LifecycleNode(
