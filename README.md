@@ -24,15 +24,11 @@ Within this repository, you’ll find everything needed to:
 **NOTE:** this repo was tested on Ubuntu 22.04 LTS, with ROS 2 Humble and Gazebo Fortress (Ignition).
 
 --- 
-<figure style="margin:0; text-align:center; border:1px solid #eaecef; padding:6px; border-radius:6px;">
-  <img src="docs/slam.png"
-       alt="Localization"
-       style="max-width:50%; height:auto;" />
-  <figcaption style="font-size:0.9em; color:#6a737d; margin-top:4px;">
-    Robot Localization in Real Time with Simulated Lidar
-  </figcaption>
-</figure>
-
+<p align="center">
+  <img src="docs/slam.png" alt="Robot Localization in Real Time with Simulated Lidar" width="700">
+  <br>
+  <em>Robot Localization in Real Time with Simulated Lidar</em>
+</p>  
 --- 
 
 > [!IMPORTANT]
