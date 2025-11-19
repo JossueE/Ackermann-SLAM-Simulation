@@ -25,7 +25,7 @@ Within this repository, you’ll find everything needed to:
 
 --- 
 <p align="center">
-  <img src="docs/slam.png" alt="Robot Localization in Real Time with Simulated Lidar" width="900">
+  <img src="docs/slam.png" alt="Robot Localization in Real Time with Simulated Lidar" width="800">
   <br>
   <em>Robot Localization in Real Time with Simulated Lidar</em>
 </p>  
@@ -373,11 +373,23 @@ Create a sensor-specific config file in `fast_lio/config/`, e.g. `simulated.yaml
 > Once the extrinsics are correct, you should see stable logs like:
 > `In num: 11520 downsamp ≈ 2400 ... effect num ≈ 1200`
 > and no more `No point, skip this scan!`.
-> 
-> The values you see in my `extrinsic_T` come from the fact that my IMU is located at the origin of `base_link` (0, 0, 0).
-> Therefore, `extrinsic_T` directly matches the `lidar_joint` origin offset.
-> In your case, these values **must** be configured according to the relative pose between your IMU (body frame) and your LiDAR in your own robot model.
 
+The `extrinsic_T` and `extrinsic_R` parameters describe the **pose of the LiDAR with respect to the IMU frame** (i.e., how the LiDAR is positioned and oriented relative to the IMU).
+
+- `extrinsic_T` is the **translation vector** from the IMU frame to the LiDAR frame.  
+- `extrinsic_R` is the **rotation matrix** from the IMU frame to the LiDAR frame.
+
+In my setup, the IMU is placed at the origin of `base_link` `(0, 0, 0)`, and the LiDAR is mounted with an offset defined by the `lidar_joint` in the robot model.  
+Because of that, the values in my `extrinsic_T` **directly match** the translation defined for the `lidar_joint` (the LiDAR position relative to `base_link` / IMU).
+
+In your case, you must set:
+
+- `extrinsic_T` to the **XYZ offset** from your IMU (body frame) to your LiDAR (e.g., “the LiDAR is 0.2 m in front and 0.1 m above the IMU”).  
+- `extrinsic_R` to the **rotation** that represents how the LiDAR is oriented relative to the IMU (for example, if the LiDAR is tilted or rotated with respect to the IMU axes).
+
+In other words:  
+> You need to configure `extrinsic_T` and `extrinsic_R` according to the **actual relative pose** between your IMU and LiDAR in **your** robot, not by copying the values from my configuration.  
+They should be consistent with your URDF/SDF model and your TF tree.
 
 Then go to `fast_lio/launch/mapping.launch.py` and modify this function:
 
